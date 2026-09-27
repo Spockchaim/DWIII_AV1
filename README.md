@@ -234,7 +234,7 @@ Durante o desenvolvimento das etapas do projeto, foram solucionados diversos pro
 ### Passo a passo
 1. Acesse a pasta raiz do microsserviço (onde está o arquivo `pom.xml` e `mvnw`):
    ```bash
-   cd atvi-autobots-microservico-spring/automanager
+   cd DWIII_AV1
    ```
 2. Inicie a aplicação com o Maven Wrapper:
    - **Linux/macOS:**
