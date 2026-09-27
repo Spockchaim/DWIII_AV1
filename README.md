@@ -112,8 +112,8 @@ classDiagram
 
 ## 🌐 3. Documentação da API REST
 
-Todos os endpoints respondem em `http://localhost:8080`.  
-Para máxima compatibilidade com suítes de testes, ferramentas REST e Postman, os endpoints de consulta suportam tanto `/{id}` quanto `/{entidade}/{id}`, e as exclusões aceitam tanto parâmetro de URL (`/excluir/{id}`) quanto corpo JSON (`/excluir`).
+Todos os endpoints respondem em `http://localhost:8080`.
+A API adota o padrão RESTful e recebe/retorna dados exclusivamente no formato JSON. O código de status `404 Not Found` é retornado adequadamente para entidades inexistentes.
 
 ### 👤 Endpoints de Cliente (`/cliente`)
 | Método | Endpoint | Descrição | Status Sucesso |
@@ -123,7 +123,6 @@ Para máxima compatibilidade com suítes de testes, ferramentas REST e Postman, 
 | `GET` | `/cliente/{id}` | Busca cliente específico pelo ID | `200 OK` / `404` |
 | `PUT` | `/cliente/atualizar` | Atualiza dados cadastrais do cliente e dependentes | `200 OK` / `404` |
 | `DELETE` | `/cliente/excluir/{id}` | Remove cliente e dispara **exclusão em cascata** | `200 OK` / `404` |
-| `DELETE` | `/cliente/excluir` | Remove cliente passando JSON `{"id": X}` no corpo | `200 OK` / `404` |
 
 ### 📄 Endpoints de Documento (`/documento`)
 | Método | Endpoint | Descrição | Status Sucesso |
@@ -133,7 +132,6 @@ Para máxima compatibilidade com suítes de testes, ferramentas REST e Postman, 
 | `GET` | `/documento/{id}` | Busca documento por ID | `200 OK` / `404` |
 | `PUT` | `/documento/atualizar` | Atualiza tipo ou número de um documento | `200 OK` / `404` |
 | `DELETE` | `/documento/excluir/{id}` | Remove documento (desvinculando do cliente pai) | `200 OK` / `404` |
-| `DELETE` | `/documento/excluir` | Remove documento via corpo JSON | `200 OK` / `404` |
 
 ### 📍 Endpoints de Endereço (`/endereco`)
 | Método | Endpoint | Descrição | Status Sucesso |
@@ -143,7 +141,6 @@ Para máxima compatibilidade com suítes de testes, ferramentas REST e Postman, 
 | `GET` | `/endereco/{id}` | Busca endereço por ID | `200 OK` / `404` |
 | `PUT` | `/endereco/atualizar` | Atualiza campos de endereço | `200 OK` / `404` |
 | `DELETE` | `/endereco/excluir/{id}` | Remove endereço (desvinculando do cliente) | `200 OK` / `404` |
-| `DELETE` | `/endereco/excluir` | Remove endereço via corpo JSON | `200 OK` / `404` |
 
 ### 📞 Endpoints de Telefone (`/telefone`)
 | Método | Endpoint | Descrição | Status Sucesso |
@@ -153,7 +150,6 @@ Para máxima compatibilidade com suítes de testes, ferramentas REST e Postman, 
 | `GET` | `/telefone/{id}` | Busca telefone por ID | `200 OK` / `404` |
 | `PUT` | `/telefone/atualizar` | Atualiza DDD ou número de telefone | `200 OK` / `404` |
 | `DELETE` | `/telefone/excluir/{id}` | Remove telefone (desvinculando do cliente pai) | `200 OK` / `404` |
-| `DELETE` | `/telefone/excluir` | Remove telefone via corpo JSON | `200 OK` / `404` |
 
 ---
 
@@ -236,43 +232,41 @@ Durante o desenvolvimento das etapas do projeto, foram solucionados diversos pro
 - **Git**
 
 ### Passo a passo
-1. Clone o repositório ou acesse a pasta do projeto:
+1. Acesse a pasta raiz do microsserviço (onde está o arquivo `pom.xml` e `mvnw`):
    ```bash
-   cd autobots/atvi-autobots-microservico-spring/automanager
+   cd atvi-autobots-microservico-spring/automanager
    ```
 2. Inicie a aplicação com o Maven Wrapper:
-   ```bash
-   ./mvnw spring-boot:run
-   ```
+   - **Linux/macOS:**
+     ```bash
+     ./mvnw spring-boot:run
+     ```
+   - **Windows:**
+     ```cmd
+     mvnw.cmd spring-boot:run
+     ```
 3. A aplicação estará pronta e respondendo em `http://localhost:8080`.
 
 ---
 
 ## 🧪 7. Testes e Validação
 
-O projeto conta com validação dupla: suíte automatizada em Java e script interativo cURL:
+O projeto conta com uma suíte de testes automatizada validando todos os Controladores via Spring MockMvc:
 
-### 1. Testes Automatizados JUnit 5 / Spring MockMvc
+### Testes Automatizados JUnit 5
 Localizados em: [`src/test/java/com/autobots/automanager/Fase6EndpointsTest.java`](file:///home/pedro/Documentos/FATEC/3Semestre/DesenvolvimentoWebIII/atv/atvi/autobots/atvi-autobots-microservico-spring/automanager/src/test/java/com/autobots/automanager/Fase6EndpointsTest.java).  
-Para rodar todos os 17 testes automatizados:
-```bash
-cd autobots/atvi-autobots-microservico-spring/automanager
-./mvnw test
-```
-**Resultado:**
+Para rodar todos os 17 testes automatizados, certifique-se de estar na mesma pasta do arquivo `pom.xml` e execute:
+
+- **Linux/macOS:** `./mvnw test`
+- **Windows:** `mvnw.cmd test`
+
+**Resultado Esperado:**
 ```text
 [INFO] Results:
 [INFO] Tests run: 17, Failures: 0, Errors: 0, Skipped: 0
 [INFO] BUILD SUCCESS
 ```
 
-### 2. Script de Bateria de Testes cURL
-Com a aplicação em execução (`./mvnw spring-boot:run`), execute o script na raiz do projeto:
-```bash
-chmod +x test_fase6_curl.sh
-./test_fase6_curl.sh
-```
-O script valida todas as operações de cadastro, busca existente e inexistente (404), listagens, atualizações, exclusões diretas e confirmação da **exclusão em cascata**.
 
 ---
 
